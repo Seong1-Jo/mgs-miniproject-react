@@ -1,9 +1,13 @@
-import React from 'react'
-
+import React from 'react';
+import NewsList from '../components/NewsList';
+import Clip from './Clip';
 function Home() {
   return (
-    <div>Home</div>
-  )
+    <div>
+      <NewsList />
+      <Clip />
+    </div>
+  );
 }
 
-export default Home
+export default Home;
