@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import News from './News';
+import { useSelector } from 'react-redux';
 
 const data = Array.from(Array(10), (_, i) => ({
   id: new Date() + i,
-  date: new Date().toUTCString(),
+  date: new Date().toUTCString() + i,
   headLine: 'Hello World ' + i,
   abstract:
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae totam aut aperiam error reiciendis cupiditate quos, aspernatur magni hic temporibus voluptas mollitia nesciunt, dolorem, dicta animi sint ex. Nobis, aperiam.',
@@ -22,15 +23,17 @@ const Container = styled.div`
   }
 `;
 function NewsList() {
+  const newsDocs = useSelector((state) => state.searchReducer.docs);
+  console.log(newsDocs);
   return (
     <Container>
-      {data.map((item) => {
+      {newsDocs.map((item) => {
         return (
           <News
-            key={item.id}
-            headLine={item.headLine}
+            key={item._id}
+            headLine={item.headline.main}
             abstract={item.abstract}
-            date={item.date}
+            date={item.pub_date}
           />
         );
       })}

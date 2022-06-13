@@ -1,40 +1,63 @@
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import persistReducer from 'redux-persist/es/persistReducer';
 import persistStore from 'redux-persist/es/persistStore';
 import storage from 'redux-persist/lib/storage';
+import thunk from 'redux-thunk';
+
+// ADD CLIP
 const INITIAL_CLIP = {
-  id: 0,
-  date: 0,
-  headLine: '',
-  abstract: '',
+  clip: [],
+  isClip: false,
 };
 const addClipReducer = persistReducer(
   {
     key: 'clip',
     storage,
-    whitelist: ['addClipReducer'],
   },
   (state = INITIAL_CLIP, action) => {
-    console.log(action.payload);
+    const { payload } = action;
     switch (action.type) {
-      case 'CLIP':
-        console.log(state);
+      case 'addCLIP':
+        const Clipped = {
+          data: payload.date,
+          headLine: payload.headLine,
+          abstract: payload.abstract,
+        };
         return {
-          ...state,
-          ...action.playoad,
+          isClip: true,
+          clip: [...state.clip, Clipped],
         };
       case 'UNCLIP':
-        return;
+        return { ...INITIAL_CLIP };
+
       default:
         return state;
     }
   }
 );
 
+// Search Data
+const INITIAL_SEARCH_DATA = {
+  docs: [],
+};
+const searchReducer = (state = INITIAL_SEARCH_DATA, action) => {
+  switch (action.type) {
+    case 'addNews':
+      return {
+        docs: [...state.docs, ...action.payload],
+      };
+
+    default:
+      return state;
+  }
+};
+
 const store = createStore(
   combineReducers({
     addClipReducer,
-  })
+    searchReducer,
+  }),
+  applyMiddleware(thunk)
 );
 
 export default store;

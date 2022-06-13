@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 const Card = styled.div`
   max-width: 600px;
   box-shadow: 1px 0px 4px 2px rgba(0, 0, 0, 0.14);
@@ -33,10 +33,10 @@ const Button = styled.button`
 `;
 function News({ headLine, abstract, date }) {
   const dispatch = useDispatch();
-  const [clip, setClip] = useState([]);
+  const clipped = useSelector((state) => state.addClipReducer);
 
   const handleAddClip = (date, headLine, abstract) => {
-    dispatch({ type: 'CLIP', payload: { date, headLine, abstract } });
+    dispatch({ type: 'addCLIP', payload: { date, headLine, abstract } });
 
     // if (!clip.includes(date)) {
     //   setClip((item) => [...item, date]);
@@ -54,9 +54,9 @@ function News({ headLine, abstract, date }) {
         onClick={() => {
           handleAddClip(date, headLine, abstract);
         }}
-        contained={!clip.includes(date)}
+        contained={clipped.isClip}
       >
-        {!clip.includes(date) ? 'Clip' : 'UnClip'}
+        {/* {!clip.includes(date) ? 'Clip' : 'UnClip'} */}
       </Button>
     </Card>
   );
