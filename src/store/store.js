@@ -3,27 +3,62 @@ import persistReducer from 'redux-persist/es/persistReducer';
 import persistStore from 'redux-persist/es/persistStore';
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
+// import { addClipReducer } from './addClipReducer';
+import { searchReducer } from './addNewsReducer';
 
+const clipPersistConfig = {
+  key: 'clip',
+  storage,
+  whitelist: ['clip'],
+};
 // ADD CLIP
 const INITIAL_CLIP = {
   clip: [],
 };
 const addClipReducer = persistReducer(
-  {
-    key: 'clip',
-    storage,
-    whitelist: ['clip'],
-  },
+  clipPersistConfig,
   (state = INITIAL_CLIP, action) => {
     const { payload } = action;
-    console.log(payload);
+    // console.log('store payload', payload);
     switch (action.type) {
       case 'addCLIP':
+        const newClip = {
+          date: payload.date,
+          headLine: payload.headLine,
+          abstract: payload.abstract,
+          isClip: true,
+        };
+
         return {
-          clip: [...state.clip, action.payload],
+          clip: [...state.clip, newClip],
+        };
+      case 'addMoreCLIP':
+        const addClip = {
+          date: payload.date,
+          headLine: payload.headLine,
+          abstract: payload.abstract,
+          isClip: true,
+        };
+        return {
+          clip: state.clip.map((clipnews) => {
+            if (clipnews.headLine !== payload.headLine) {
+              return {
+                ...clipnews,
+                date: payload.date,
+                headLine: payload.headLine,
+                abstract: payload.abstract,
+                isClip: true,
+              };
+            }
+            return clipnews;
+          }),
         };
       case 'UNCLIP':
-        return { ...INITIAL_CLIP };
+        return {
+          clip: state.clip.filter(
+            (clipNews) => clipNews.headLine !== payload.headLine
+          ),
+        };
 
       default:
         return state;
@@ -31,26 +66,10 @@ const addClipReducer = persistReducer(
   }
 );
 
-// Search Data
-const INITIAL_SEARCH_DATA = {
-  docs: [],
-};
-const searchReducer = (state = INITIAL_SEARCH_DATA, action) => {
-  switch (action.type) {
-    case 'addNews':
-      return {
-        docs: [...state.docs, ...action.payload],
-      };
-
-    default:
-      return state;
-  }
-};
-
 const store = createStore(
   combineReducers({
     addClipReducer,
-    searchReducer,
+    // searchReducer: persistReducer(newsPersistConfig, searchReducer),
   }),
   applyMiddleware(thunk)
 );

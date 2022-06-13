@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import News from './News';
-
+import { useSelector } from 'react-redux';
 const data = Array.from(Array(10), (_, i) => ({
-  id: new Date() + i,
+  id: i,
   date: new Date().toUTCString() + i,
   headLine: 'Hello World ' + i,
   abstract:
@@ -22,6 +22,7 @@ const Container = styled.div`
   }
 `;
 function NewsList() {
+  const clipped = useSelector((state) => state.searchReducer);
   return (
     <Container>
       {data.map((item) => {
