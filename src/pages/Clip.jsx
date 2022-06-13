@@ -1,12 +1,14 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 function Clip() {
-  const clip = useSelector((state) => state.addClipReducer);
-
+  const clipped = useSelector((state) => state.addClipReducer.clip);
+  // console.log(clipped);
   return (
     <div>
       <hr />
-      {clip.date}
+      {clipped.map((news) => {
+        return <div key={news.headLine}>{news.headLine}</div>;
+      })}
     </div>
   );
 }

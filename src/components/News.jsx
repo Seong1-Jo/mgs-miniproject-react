@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+
 const Card = styled.div`
   max-width: 600px;
   box-shadow: 1px 0px 4px 2px rgba(0, 0, 0, 0.14);
@@ -13,6 +14,7 @@ const Card = styled.div`
     margin-right: 0;
   }
 `;
+
 const Button = styled.button`
   margin-top: 10px;
   border: none;
@@ -31,19 +33,31 @@ const Button = styled.button`
     transform: scale(0.98);
   }
 `;
+
 function News({ headLine, abstract, date }) {
   const dispatch = useDispatch();
+
   const clipped = useSelector((state) => state.addClipReducer);
 
   const handleAddClip = (date, headLine, abstract) => {
-    dispatch({ type: 'addCLIP', payload: { date, headLine, abstract } });
-
-    // if (!clip.includes(date)) {
-    //   setClip((item) => [...item, date]);
-    // } else {
-    //   setClip(clip.filter((item) => date !== item));
-    // }
+    const payload = {
+      date,
+      headLine,
+      abstract,
+    };
+    if (!clipped.clip.length) {
+      dispatch({ type: 'addCLIP', payload });
+    } else {
+      clipped.clip.forEach((news) => {
+        if (news.headLine !== headLine) {
+          dispatch({ type: 'addCLIP', payload });
+        } else {
+          dispatch({ type: 'UNCLIP' });
+        }
+      });
+    }
   };
+
   return (
     <Card>
       <h2>{headLine}</h2>
@@ -54,9 +68,8 @@ function News({ headLine, abstract, date }) {
         onClick={() => {
           handleAddClip(date, headLine, abstract);
         }}
-        contained={clipped.isClip}
       >
-        {/* {!clip.includes(date) ? 'Clip' : 'UnClip'} */}
+        {!clipped.clip.includes(date) ? 'Clip' : 'UnClip'}
       </Button>
     </Card>
   );

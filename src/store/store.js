@@ -7,25 +7,20 @@ import thunk from 'redux-thunk';
 // ADD CLIP
 const INITIAL_CLIP = {
   clip: [],
-  isClip: false,
 };
 const addClipReducer = persistReducer(
   {
     key: 'clip',
     storage,
+    whitelist: ['clip'],
   },
   (state = INITIAL_CLIP, action) => {
     const { payload } = action;
+    console.log(payload);
     switch (action.type) {
       case 'addCLIP':
-        const Clipped = {
-          data: payload.date,
-          headLine: payload.headLine,
-          abstract: payload.abstract,
-        };
         return {
-          isClip: true,
-          clip: [...state.clip, Clipped],
+          clip: [...state.clip, action.payload],
         };
       case 'UNCLIP':
         return { ...INITIAL_CLIP };
