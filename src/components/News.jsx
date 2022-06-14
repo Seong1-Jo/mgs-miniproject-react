@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -23,7 +23,9 @@ const Button = styled.button`
   border-radius: 3px;
   border: 1px solid royalblue;
   background-color: ${(props) => (props.contained ? 'white' : 'royalblue')};
-  color: ${(props) => (props.contained ? 'royalblue' : 'white')};
+  color: ${(props) => {
+    return props.contained ? 'royalblue' : 'white';
+  }};
   transition: background-color 0.2s;
   &:hover {
     background-color: royalblue;
@@ -36,57 +38,21 @@ const Button = styled.button`
 
 function News({ headLine, abstract, date }) {
   const dispatch = useDispatch();
-  const [clip, setClip] = useState(false);
   const clipped = useSelector((state) => state.addClipReducer);
 
-  // useEffect(() => {
-  //   if (!clipped.clip.length) {
-  //     setClip(true);
-  //     console.log('마운트 됨 true ', clip);
-  //   } else {
-  //     if (!clipped.clip.some((storedate) => storedate.date === date)) {
-  //       setClip(true);
-  //       console.log('마운트 됨 true 22 ', clip);
-  //     } else {
-  //       setClip(false);
-  //       console.log('마운트 됨 false 33 ', clip);
-  //     }
-  //   }
-  // }, [clipped.clip, clip]);
-  // const handleAddClip = useCallback(
-  //   (date, headLine, abstract) => {
-  //     const payload = {
-  //       date,
-  //       headLine,
-  //       abstract,
-  //     };
-
-  //     if (!clipped.clip.length) {
-  //       setClip(true);
-  //       dispatch({ type: 'addCLIP', payload });
-  //     } else {
-  //       if (!clipped.clip.some(checkDate)) {
-  //         setClip(true);
-  //         dispatch({ type: 'addCLIP', payload });
-  //       } else {
-  //         setClip(false);
-  //         dispatch({ type: 'UNCLIP', payload: { headLine } });
-  //       }
-  //     }
-  //   },
-  //   [checkDate, clipped.clip, dispatch]
-  // );
   const handleAddClip = (date, headLine, abstract) => {
     const payload = {
       date,
       headLine,
       abstract,
     };
-    // console.log(clipped.clip.some((storedate) => storedate.isClip));
+    // console.log(
+    //   clipped.clip.some((storedate) => storedate.headLine === headLine)
+    // );
     if (!clipped.clip.length) {
       dispatch({ type: 'addCLIP', payload });
     } else {
-      if (!clipped.clip.some((storedate) => storedate.headLine === headLine)) {
+      if (!clipped.clip.some((storeData) => storeData.headLine === headLine)) {
         dispatch({ type: 'addCLIP', payload });
       } else {
         dispatch({ type: 'UNCLIP', payload: { headLine } });
@@ -99,7 +65,21 @@ function News({ headLine, abstract, date }) {
       <h2>{headLine}</h2>
       <figure>{date}</figure>
       <div>{abstract}</div>
-      {clipped.clip.some((storedate) => storedate.headLine === headLine) &&
+      <Button
+        type='button'
+        onClick={() => {
+          handleAddClip(date, headLine, abstract);
+        }}
+        contained={
+          !clipped.clip.some((storeData) => storeData.headLine === headLine)
+        }
+      >
+        {!clipped.clip.some((storeData) => storeData.headLine === headLine)
+          ? 'Clip'
+          : 'UnClip'}
+      </Button>
+      <Button contained={true}>Link</Button>
+      {/* {clipped.clip.some((storedate) => storedate.headLine === headLine) &&
       clipped.clip.some((storedate) => storedate.isClip) ? (
         <Button
           type='button'
@@ -107,9 +87,7 @@ function News({ headLine, abstract, date }) {
             handleAddClip(date, headLine, abstract);
           }}
         >
-          {/* {!clipped.clip.some((storedate) => storedate.date === date) && clip
-          ? 'Clip'
-          : 'UnClip'} */}
+        
           UnClip
         </Button>
       ) : (
@@ -119,12 +97,10 @@ function News({ headLine, abstract, date }) {
             handleAddClip(date, headLine, abstract);
           }}
         >
-          {/* {!clipped.clip.some((storedate) => storedate.date === date) && clip
-          ? 'Clip'
-          : 'UnClip'} */}
+          
           Clip
         </Button>
-      )}
+      )} */}
     </Card>
   );
 }

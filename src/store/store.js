@@ -4,7 +4,6 @@ import persistStore from 'redux-persist/es/persistStore';
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 // import { addClipReducer } from './addClipReducer';
-import { searchReducer } from './addNewsReducer';
 
 const clipPersistConfig = {
   key: 'clip',
@@ -26,33 +25,12 @@ const addClipReducer = persistReducer(
           date: payload.date,
           headLine: payload.headLine,
           abstract: payload.abstract,
-          isClip: true,
         };
 
         return {
           clip: [...state.clip, newClip],
         };
-      case 'addMoreCLIP':
-        const addClip = {
-          date: payload.date,
-          headLine: payload.headLine,
-          abstract: payload.abstract,
-          isClip: true,
-        };
-        return {
-          clip: state.clip.map((clipnews) => {
-            if (clipnews.headLine !== payload.headLine) {
-              return {
-                ...clipnews,
-                date: payload.date,
-                headLine: payload.headLine,
-                abstract: payload.abstract,
-                isClip: true,
-              };
-            }
-            return clipnews;
-          }),
-        };
+
       case 'UNCLIP':
         return {
           clip: state.clip.filter(
