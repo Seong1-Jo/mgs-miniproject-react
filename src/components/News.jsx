@@ -38,7 +38,7 @@ const Button = styled.button`
 
 function News({ headLine, abstract, date }) {
   const dispatch = useDispatch();
-  const clipped = useSelector((state) => state.addClipReducer);
+  const clipped = useSelector((state) => state.addClipReducer.clip);
 
   const handleAddClip = (date, headLine, abstract) => {
     const payload = {
@@ -46,14 +46,12 @@ function News({ headLine, abstract, date }) {
       headLine,
       abstract,
     };
-    // console.log(
-    //   clipped.clip.some((storedate) => storedate.headLine === headLine)
-    // );
-    if (!clipped.clip.length) {
-      dispatch({ type: 'addCLIP', payload });
+
+    if (!clipped.length) {
+      dispatch({ type: 'ADDCLIP', payload });
     } else {
-      if (!clipped.clip.some((storeData) => storeData.headLine === headLine)) {
-        dispatch({ type: 'addCLIP', payload });
+      if (!clipped.some((storeData) => storeData.headLine === headLine)) {
+        dispatch({ type: 'ADDCLIP', payload });
       } else {
         dispatch({ type: 'UNCLIP', payload: { headLine } });
       }
@@ -71,10 +69,10 @@ function News({ headLine, abstract, date }) {
           handleAddClip(date, headLine, abstract);
         }}
         contained={
-          !clipped.clip.some((storeData) => storeData.headLine === headLine)
+          !clipped.some((storeData) => storeData.headLine === headLine)
         }
       >
-        {!clipped.clip.some((storeData) => storeData.headLine === headLine)
+        {!clipped.some((storeData) => storeData.headLine === headLine)
           ? 'Clip'
           : 'UnClip'}
       </Button>

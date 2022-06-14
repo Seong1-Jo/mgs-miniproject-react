@@ -20,7 +20,7 @@ const addClipReducer = persistReducer(
     const { payload } = action;
     // console.log('store payload', payload);
     switch (action.type) {
-      case 'addCLIP':
+      case 'ADDCLIP':
         const newClip = {
           date: payload.date,
           headLine: payload.headLine,
